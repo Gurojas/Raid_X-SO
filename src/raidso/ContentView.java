@@ -37,10 +37,11 @@ public class ContentView extends Stage{
         grid.setHgap(this.gap);
         grid.setVgap(this.gap);
         
-        Label labelTitle = new Label("Contenido");
+        Label labelTitle = new Label("Contenido original");
         labelTitle.setFont(Font.font("Verdana",14));
         
-        TextArea textAreaContent = new TextArea(originalContent);
+        TextArea textAreaContent = new TextArea();
+        textAreaContent.appendText(originalContent);
         textAreaContent.setEditable(false);
         
         Button closeButton = new Button("Close");

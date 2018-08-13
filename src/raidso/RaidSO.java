@@ -31,20 +31,24 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Gustavo
+ * @author Gustavo Rojas
  */
 public class RaidSO extends Application {
     
     public final int gap = 10;
     public File selectedFile;
+    
+    public RaidGenerator raidGenerator;
+    public FileOperations fileOperations;
    
     @Override
     public void start(Stage primaryStage) {
         
-        RaidGenerator rg = new RaidGenerator();
-        System.out.println(rg.charToBin('d'));
         
-
+        this.raidGenerator = new RaidGenerator();
+        this.fileOperations = new FileOperations();
+        
+     
         Label labelTitle = new Label("Tarea RAID SO");
         labelTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         
@@ -77,7 +81,7 @@ public class RaidSO extends Application {
         Label raidsOptionLabel = new Label("Options: ");
         
         ObservableList<String> raidOptions = FXCollections.observableArrayList(
-                "Raid 0","Raid 1","Raid 2","Raid 3","Raid 4","Raid 5","Raid 6"
+                "Raid 0","Raid 1","Raid 3","Raid 4","Raid 5","Raid 6"
         );
         ComboBox<String> raidsComboBox = new ComboBox<>(raidOptions);
         raidsComboBox.setPrefWidth(200);
@@ -199,9 +203,6 @@ public class RaidSO extends Application {
                         String fileContent = fileOperations.getFileContent(selectedFile);
                         raidGenerator.raid1(fileContent, selectedFile.getName());
                     }
-                    if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 2")){
-                        
-                    }
                     if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 3")){
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
@@ -214,12 +215,25 @@ public class RaidSO extends Application {
                         String fileContent = fileOperations.getFileContent(selectedFile);
                         raidGenerator.raid4(fileContent, selectedFile.getName());
                     }
+                    if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 5")){
+                        RaidGenerator raidGenerator = new RaidGenerator();
+                        FileOperations fileOperations = new FileOperations();
+                        String fileContent = fileOperations.getFileContent(selectedFile);
+                        raidGenerator.raid5(fileContent, selectedFile.getName());
+                    }
+                    if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 6")){
+                        RaidGenerator raidGenerator = new RaidGenerator();
+                        FileOperations fileOperations = new FileOperations();
+                        String fileContent = fileOperations.getFileContent(selectedFile);
+                        raidGenerator.raid6(fileContent, selectedFile.getName());
+                    }
+                    
                     
                 }
 
                 if (radioReadButton.isSelected()){
                     RaidGenerator raidGenerator = new RaidGenerator();
-                    String originaContent = raidGenerator.readRaid4(selectedFile.getAbsolutePath());
+                    String originaContent = raidGenerator.readRaid6(selectedFile.getAbsolutePath());
                     ContentView contentView = new ContentView(originaContent);
                     contentView.show();
                 }

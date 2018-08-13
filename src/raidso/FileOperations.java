@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Gustavo
+ * @author Gustavo Rojas
  */
 public class FileOperations {
     
@@ -156,38 +156,7 @@ public class FileOperations {
                 }
             }
         }
-        /*
-        for (int i = 0; i < parities.size(); i++) {
-            parity = parity + parities.get(i);
-            if ((i + 1) % numDisk == 0){
-                try {
-                    fw = new FileWriter(file,true);
-                    fw.write(parity+"\n");
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                parity = "";
-                
-                try {
-                    fw.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        
-        // cuando el numero de caractes de la paridad no coincide con el numero de discos
-        if (!parity.equals("")){
-            try {
-                fw = new FileWriter(file,true);
-                fw.write(parity+"\n");
-                fw.close();   
-            } catch (IOException ex) {
-                Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        */
+
     }
     
     public String readFile(String[] subFoldersNames, String path, int numDisk){
@@ -214,7 +183,7 @@ public class FileOperations {
             
             while (scanner.hasNextLine()){
                 String contentDisk = scanner.nextLine();
-                blockDisk.add(contentDisk);     
+                blockDisk.add(contentDisk);
             }
             scanner.close();
         }
@@ -241,7 +210,8 @@ public class FileOperations {
         
         for (int i = 0; i < maxSize; i++) {
             for (int j = 0; j < numDisk; j++) {
-                if (!blockDisk[i][j].equals("")){
+                // blockDisk[i][j].length() != 1 caso cuando viene con bit de paridad (RAID 5 y 6)
+                if (!blockDisk[i][j].equals("") && blockDisk[i][j].length() != 1){
                     binaryString = binaryString + blockDisk[i][j];
                 }
             }
