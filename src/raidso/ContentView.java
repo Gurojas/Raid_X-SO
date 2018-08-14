@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Gustavo
+ * @author Gustavo Rojas
  */
 public class ContentView extends Stage{
     
@@ -41,7 +41,7 @@ public class ContentView extends Stage{
         labelTitle.setFont(Font.font("Verdana",14));
         
         TextArea textAreaContent = new TextArea();
-        textAreaContent.appendText(originalContent);
+        textAreaContent.setText(originalContent);
         textAreaContent.setEditable(false);
         
         Button closeButton = new Button("Close");
@@ -55,7 +55,7 @@ public class ContentView extends Stage{
         
         mainPane.setCenter(grid);
         
-        Scene scene = new Scene(mainPane,400,400);
+        Scene scene = new Scene(mainPane,400,300);
         
         this.setTitle(labelTitle.getText());
         this.setResizable(false);

@@ -72,7 +72,7 @@ public class FileOperations {
     }
     
     //writeFile(ArrayList<String> blocks, String[] subFoldersNames, String path, int numDisk)
-    public void writeFile(ArrayList<String> blocks, ArrayList<String> subFoldersNames, String path, int numDisk){
+    public boolean writeFile(ArrayList<String> blocks, ArrayList<String> subFoldersNames, String path, int numDisk){
         File file = null;
         FileWriter fw = null;
         
@@ -88,25 +88,30 @@ public class FileOperations {
                 fw = new FileWriter(file,true);
             } catch (IOException ex) {
                 Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
             }
             
             String content = blocks.get(i);
             try {
-                fw.write(content+"\n");
+                fw.write(content);
+                fw.write("\r\n");
             } catch (IOException ex) {
                 Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
             }
             try {
                 fw.close(); // important line
             } catch (IOException ex) {
                 Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
             }
             
             j = (j + 1) % numDisk;
         }
+        return true;
     }
     
-    public void writeFileParity(String parityFolder, ArrayList<String> parities ,String path, int numDisk, int raidType){
+    public boolean writeFileParity(String parityFolder, ArrayList<String> parities ,String path, int numDisk, int raidType){
         File file = null;
         FileWriter fw = null;
         
@@ -124,6 +129,7 @@ public class FileOperations {
 
                     } catch (IOException ex) {
                         Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                        return false;
                     }
                     parity = "";
 
@@ -131,6 +137,7 @@ public class FileOperations {
                         fw.close();
                     } catch (IOException ex) {
                         Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                        return false;
                     }
                 }
             }
@@ -142,6 +149,7 @@ public class FileOperations {
                     fw.close();   
                 } catch (IOException ex) {
                     Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                    return false;
                 }
             }
         }
@@ -153,10 +161,11 @@ public class FileOperations {
                     fw.close();
                 } catch (IOException ex) {
                     Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                    return false;
                 }
             }
         }
-
+        return true;
     }
     
     public String readFile(String[] subFoldersNames, String path, int numDisk){
@@ -230,6 +239,14 @@ public class FileOperations {
         return max;
 
     }
+    
+    public boolean isRaidFolder(File file){
+        
+        String fileFolder = file.getName();
+       
+        return fileFolder.matches("RAID_([0-1]|[3-6])");
+    }
+    
     
     
     

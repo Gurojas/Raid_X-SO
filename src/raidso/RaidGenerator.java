@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Gustavo
+ * @author Gustavo Rojas
  */
 public class RaidGenerator {
     
@@ -27,7 +27,7 @@ public class RaidGenerator {
         
     }
     
-    public void raid0(String fileContent, String fileName){
+    public boolean raid0(String fileContent, String fileName){
         
         char stringArray[] = fileContent.toCharArray();
         
@@ -57,12 +57,13 @@ public class RaidGenerator {
         
         fileOperations.createSubFolders(subFolderNames, fileFolder.getAbsolutePath(), this.numDisk);
         
-        fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);
+        boolean writeResult = fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);
         
+        return writeResult;
         
     }
     
-    public void raid1(String fileContent,String fileName){
+    public boolean raid1(String fileContent,String fileName){
         char stringArray[] = fileContent.toCharArray();
         
         String binaryString = "";
@@ -101,18 +102,17 @@ public class RaidGenerator {
         fileOperations.createSubFolders(subFolderMirrorNames, fileFolder.getAbsolutePath(), this.numDisk);
         
 
-        fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);       
-        fileOperations.writeFile(blocks, subFolderMirrorNames,fileFolder.getAbsolutePath(),this.numDisk);
+        boolean writeResult = fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);       
+        boolean writeMirroResult = fileOperations.writeFile(blocks, subFolderMirrorNames,fileFolder.getAbsolutePath(),this.numDisk);
         
-        
-        
+        return writeResult && writeMirroResult;
     }
     
     public void raid2(String fileContent, String fileName){
         
     }
     
-    public void raid3(String fileContent, String fileName){
+    public boolean raid3(String fileContent, String fileName){
         char stringArray[] = fileContent.toCharArray();
         
         String binaryString = "";
@@ -147,16 +147,17 @@ public class RaidGenerator {
         // bit de paridad de cada bloque
         ArrayList<String> paritiesBlock = this.parityBlocks(blocks);
         
-        fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);
+        boolean writeResult = fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);
         
         int raidType = 3;
         
         // escribo carpeta de paridad
-        fileOperations.writeFileParity(fileNameWithoutFormat+"(parity)", paritiesBlock, fileFolder.getAbsolutePath(), this.numDisk, raidType);
+        boolean writeParityResult = fileOperations.writeFileParity(fileNameWithoutFormat+"(parity)", paritiesBlock, fileFolder.getAbsolutePath(), this.numDisk, raidType);
 
+        return writeResult && writeParityResult;
     }
     
-    public void raid4(String fileContent, String fileName){
+    public boolean raid4(String fileContent, String fileName){
         char stringArray[] = fileContent.toCharArray();
         
         String binaryString = "";
@@ -209,18 +210,18 @@ public class RaidGenerator {
             binarySector = "";
         }
         
-        fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);  
+        boolean writeResult = fileOperations.writeFile(blocks, subFolderNames,fileFolder.getAbsolutePath(),this.numDisk);  
         
         int raidType = 4;
         
         // escribo carpeta de paridad
-        fileOperations.writeFileParity(fileNameWithoutFormat+"(parity)", paritiesSector, fileFolder.getAbsolutePath(), this.numDisk, raidType);
+        boolean writeParityResult = fileOperations.writeFileParity(fileNameWithoutFormat+"(parity)", paritiesSector, fileFolder.getAbsolutePath(), this.numDisk, raidType);
         
-        
+        return writeResult && writeResult;
         
     }
     
-    public void raid5(String fileContent, String fileName){
+    public boolean raid5(String fileContent, String fileName){
         char stringArray[] = fileContent.toCharArray();
         
         String binaryString = "";
@@ -251,10 +252,11 @@ public class RaidGenerator {
         
         ArrayList<String> newBlocks = this.blocksWithParityRaid5(blocks);
         
-        fileOperations.writeFile(newBlocks, subFolderNames, fileFolder.getAbsolutePath(), this.numDisk);
+        boolean writeResult = fileOperations.writeFile(newBlocks, subFolderNames, fileFolder.getAbsolutePath(), this.numDisk);
+        return writeResult;
     }
     
-    public void raid6(String fileContent, String fileName){
+    public boolean raid6(String fileContent, String fileName){
         char stringArray[] = fileContent.toCharArray();
         
         String binaryString = "";
@@ -285,8 +287,8 @@ public class RaidGenerator {
         
         ArrayList<String> newBlocks = this.blocksWithParityRaid6(blocks);
         
-        fileOperations.writeFile(newBlocks, subFolderNames, fileFolder.getAbsolutePath(), this.numDisk);
-       
+        boolean writeResult = fileOperations.writeFile(newBlocks, subFolderNames, fileFolder.getAbsolutePath(), this.numDisk);
+        return writeResult;
     }
     
     public String readRaid0(String path){

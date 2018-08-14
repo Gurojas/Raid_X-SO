@@ -14,6 +14,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -87,8 +89,8 @@ public class RaidSO extends Application {
         raidsComboBox.setPrefWidth(200);
         raidsComboBox.setValue("Raid 0");
         
-        Button aceptarButton = new Button("Aceptar");
-        aceptarButton.setPrefWidth(100);
+        Button generateRaidButton = new Button("Generate");
+        generateRaidButton.setPrefWidth(100);
             
         GridPane gridPane = new GridPane();
         gridPane.setVgap(this.gap);
@@ -109,7 +111,7 @@ public class RaidSO extends Application {
         gridPane.add(raidsOptionLabel,0,3);
         gridPane.add(raidsComboBox,1,3);
         
-        gridPane.add(aceptarButton, 0, 4);
+        gridPane.add(generateRaidButton, 0, 4);
         
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(this.gap));
@@ -120,7 +122,7 @@ public class RaidSO extends Application {
         BorderPane.setMargin(labelTitle, new Insets(this.gap));
         
         
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 600, 300);
         
         primaryStage.setTitle(labelTitle.getText());
         primaryStage.setResizable(false);
@@ -181,13 +183,13 @@ public class RaidSO extends Application {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 directoryChooser.setTitle("Open Resource folder");
                 selectedFile = directoryChooser.showDialog(primaryStage);
-                if (selectedFile != null){
+                if (selectedFile != null){                                    
                     readField.setText(selectedFile.getAbsolutePath());
                 }
             }
         });
         
-        aceptarButton.setOnAction(new EventHandler<ActionEvent>() {
+        generateRaidButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if (radioSaveButton.isSelected()){
@@ -195,52 +197,144 @@ public class RaidSO extends Application {
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
                         String fileContent = fileOperations.getFileContent(selectedFile);
-                        raidGenerator.raid0(fileContent, selectedFile.getName());
+                        boolean result = raidGenerator.raid0(fileContent, selectedFile.getName());
+                        if (result){
+                            showAlert("Raid 0", AlertType.INFORMATION);
+                        }
+                        else{
+                            showAlert("Raid 0", AlertType.ERROR);
+                        }
                     }
                     if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 1")){
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
                         String fileContent = fileOperations.getFileContent(selectedFile);
-                        raidGenerator.raid1(fileContent, selectedFile.getName());
+                        boolean result = raidGenerator.raid1(fileContent, selectedFile.getName());
+                        if (result){
+                            showAlert("Raid 1", AlertType.INFORMATION);
+                        }
+                        else{
+                            showAlert("Raid 1", AlertType.ERROR);
+                        }
                     }
                     if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 3")){
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
                         String fileContent = fileOperations.getFileContent(selectedFile);
-                        raidGenerator.raid3(fileContent, selectedFile.getName());
+                        boolean result = raidGenerator.raid3(fileContent, selectedFile.getName());
+                        if (result){
+                            showAlert("Raid 3", AlertType.INFORMATION);
+                        }
+                        else{
+                            showAlert("Raid 3", AlertType.ERROR);
+                        }
                     }
                     if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 4")){
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
                         String fileContent = fileOperations.getFileContent(selectedFile);
-                        raidGenerator.raid4(fileContent, selectedFile.getName());
+                        boolean result = raidGenerator.raid4(fileContent, selectedFile.getName());
+                        if (result){
+                            showAlert("Raid 4", AlertType.INFORMATION);
+                        }
+                        else{
+                            showAlert("Raid 5", AlertType.ERROR);
+                        }
                     }
                     if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 5")){
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
                         String fileContent = fileOperations.getFileContent(selectedFile);
-                        raidGenerator.raid5(fileContent, selectedFile.getName());
+                        boolean result = raidGenerator.raid5(fileContent, selectedFile.getName());
+                        if (result){
+                            showAlert("Raid 5", AlertType.INFORMATION);
+                        }
+                        else{
+                            showAlert("Raid 5", AlertType.ERROR);
+                        }
                     }
                     if (raidsComboBox.getSelectionModel().getSelectedItem().equals("Raid 6")){
                         RaidGenerator raidGenerator = new RaidGenerator();
                         FileOperations fileOperations = new FileOperations();
                         String fileContent = fileOperations.getFileContent(selectedFile);
-                        raidGenerator.raid6(fileContent, selectedFile.getName());
+                        boolean result = raidGenerator.raid6(fileContent, selectedFile.getName());
+                        if (result){
+                            showAlert("Raid 6", AlertType.INFORMATION);
+                        }
+                        else{
+                            showAlert("Raid 6", AlertType.ERROR);
+                        }
                     }
-                    
-                    
+                      
                 }
 
                 if (radioReadButton.isSelected()){
                     RaidGenerator raidGenerator = new RaidGenerator();
-                    String originaContent = raidGenerator.readRaid6(selectedFile.getAbsolutePath());
-                    ContentView contentView = new ContentView(originaContent);
-                    contentView.show();
+                    
+                    if (selectedFile != null){
+                        if (fileOperations.isRaidFolder(selectedFile)){
+                            String selectedFileFolder = selectedFile.getName();
+                            if (selectedFileFolder.equals("RAID_0")){
+                                String originalContent = raidGenerator.readRaid0(selectedFile.getAbsolutePath());
+                                ContentView contentView = new ContentView(originalContent);
+                                contentView.show();
+                            }
+                            else if (selectedFileFolder.equals("RAID_1")){
+                                String originalContent = raidGenerator.readRaid1(selectedFile.getAbsolutePath());
+                                ContentView contentView = new ContentView(originalContent);
+                                contentView.show();
+                            }
+                            else if(selectedFileFolder.equals("RAID_3")){
+                                String originalContent = raidGenerator.readRaid3(selectedFile.getAbsolutePath());
+                                ContentView contentView = new ContentView(originalContent);
+                                contentView.show();
+                            }
+                            else if(selectedFileFolder.equals("RAID_4")){
+                                String originalContent = raidGenerator.readRaid4(selectedFile.getAbsolutePath());
+                                ContentView contentView = new ContentView(originalContent);
+                                contentView.show();
+                            }
+                            else if(selectedFileFolder.equals("RAID_5")){
+                                String originalContent = raidGenerator.readRaid5(selectedFile.getAbsolutePath());
+                                ContentView contentView = new ContentView(originalContent);
+                                contentView.show();
+                            }
+                            else if(selectedFileFolder.equals("RAID_6")){
+                                String originalContent = raidGenerator.readRaid6(selectedFile.getAbsolutePath());
+                                ContentView contentView = new ContentView(originalContent);
+                                contentView.show();
+                            }
+                        }
+                        else{
+                            Alert alert = new Alert(AlertType.ERROR);
+                            alert.setTitle("Ventana de error");
+                            alert.setHeaderText("Carpeta con nombre incorrecto");
+                            alert.setContentText("Nombre correcto: RAID_X");
+                            alert.showAndWait();
+                        }
+                    }
+                    
+                    //String originalContent = raidGenerator.readRaid0(selectedFile.getAbsolutePath());
+                    //ContentView contentView = new ContentView(originalContent);
+                    //contentView.show();
                 }
             }
         });
         
 
+    }
+    
+    public void showAlert(String raid, AlertType alertType){
+        Alert alert = new Alert(alertType);
+        alert.setTitle("Ventana de informacion");
+        if (alertType == AlertType.INFORMATION){
+            alert.setHeaderText(raid+" creado con exito !!");
+        }
+        else if (alertType == AlertType.ERROR){
+            alert.setHeaderText(raid+" no pudo ser creado :(");
+        }
+        alert.setContentText("Puede cerrar esta ventana");
+        alert.showAndWait();
     }
 
     /**
